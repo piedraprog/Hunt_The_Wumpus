@@ -1,3 +1,4 @@
 export const environment = {
-  production: true
+  production: true,
+  pageTitle: "Hunt The Wumpus | The Game"
 };

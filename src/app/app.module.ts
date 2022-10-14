@@ -3,18 +3,25 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { RulesModalComponent } from './components/rules-modal/rules-modal.component';
-import { GameComponent } from './components/game/game.component';
+import { ComponentModule } from './components/components.module';
+
+// import 
+
+// ANGULAR MATERIAL IMPORT DOCUMENT
+import { MeterialAngModule } from './material-ang.module'
+import { PagesModule } from './pages/pages.module';
+
 
 @NgModule({
   declarations: [
     AppComponent,
-    RulesModalComponent,
-    GameComponent
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    MeterialAngModule,
+    ComponentModule,
+    PagesModule
   ],
   providers: [],
   bootstrap: [AppComponent]
