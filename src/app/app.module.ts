@@ -3,13 +3,13 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { ComponentModule } from './components/components.module';
-
-// import 
 
 // ANGULAR MATERIAL IMPORT DOCUMENT
 import { MeterialAngModule } from './material-ang.module'
-import { PagesModule } from './pages/pages.module';
+
+// COMPONENTS & PAGES
+import { PagesModule } from '@pages/pages.module';
+import { ComponentModule } from '@components/components.module';
 
 
 @NgModule({

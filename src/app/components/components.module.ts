@@ -7,11 +7,12 @@ import { NavbarComponent } from "./navbar/navbar.component";
 import { RulesModalComponent } from "./rules-modal/rules-modal.component";
 
 
+
 @NgModule({
     declarations:[
         RulesModalComponent,
         GameComponent,
-        NavbarComponent
+        NavbarComponent,
     ],
     imports:[
         BrowserModule,
