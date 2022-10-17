@@ -1,12 +1,12 @@
 import { Component, OnInit, ViewChild, AfterViewInit, HostListener, Input } from '@angular/core';
-import { GameService } from '@services/game/game.service';
 import { Keycode } from '@interfaces/keys';
-import { ResourcesService } from '@services/resources/resources.service';
-import { UtilsService } from '@services/utils/utils.service';
-import { PlayerService } from '@services/player/player.service';
 import { StorageService } from '@services/storage/storage.service';
+import { Player } from '@classes/player';
+import { Resources } from '@classes/resources';
+import { Environment } from '@classes/environment';
 
 
+// interface result
 
 @Component({
   selector: 'app-game',
@@ -26,49 +26,57 @@ export class GameComponent implements OnInit , AfterViewInit {
     context : CanvasRenderingContext2D;
     isFinished : boolean = false;
     isDead : boolean = false;
+    images : any;
 
+
+    // objects 
+    player : Player;
+    env : any;
+    resources : Resources;
+    isAlive: boolean;
+
+    keyCodes : Keycode = {
+        ArrowUp : false,
+        ArrowDown: false,
+        ArrowLeft: false,
+        ArrowRight: false,
+        Space: false,
+        Enter: false,   
+    }
 
 
     constructor(
-        private _GameService : GameService,
-        private _ResourcesService : ResourcesService,
-        private _PlayerService : PlayerService,
         private _StorageService: StorageService
     ) { }
 
     @HostListener('document:keydown', ['$event'])
     handleKeyPress(event: KeyboardEvent) {      
-
         const key = event.keyCode
         switch (key) {
             case 37: // Left
-                this._PlayerService.keyCodes.ArrowLeft = true;
-                this._PlayerService.update(this.context);
-                // this._GameService.drawEnvironment(this.context, this.roomsOnRow, this.roomSize);
-
+                this.keyCodes.ArrowLeft = true;
+                this.Update();
 				break;
+                
 			case 38: // Up
-                this._PlayerService.keyCodes.ArrowUp = true;
-                this._PlayerService.update(this.context);
-                // this._GameService.drawEnvironment(this.context, this.roomsOnRow, this.roomSize);
+                this.keyCodes.ArrowUp = true;
+                this.Update();
 				break;
 			case 39: // Right
-                this._PlayerService.keyCodes.ArrowRight = true;
-                this._PlayerService.update(this.context);
-                // this._GameService.drawEnvironment(this.context, this.roomsOnRow, this.roomSize);
+                this.keyCodes.ArrowRight = true;
+                this.Update();
 				break;
 			case 40: // Down
-                this._PlayerService.keyCodes.ArrowDown = true;
-                this._PlayerService.update(this.context);
-                // this._GameService.drawEnvironment(this.context, this.roomsOnRow, this.roomSize);
+                this.keyCodes.ArrowDown = true;
+                this.Update();
 				break;
 			case 32: // Space
-                this._PlayerService.keyCodes.Space = true;
-                // this._PlayerService.update(this.context);
+                this.keyCodes.Space = true;
+                this.Update();
 				break;
 			case 13: // enter
-                this._PlayerService.keyCodes.Enter = true;
-                // this._PlayerService.update(this.context);
+                this.keyCodes.Enter = true;
+                this.Update();
 				break;
         }
     }
@@ -90,104 +98,99 @@ export class GameComponent implements OnInit , AfterViewInit {
 
         canvas.width = this.canvasSize;
         canvas.height = this.canvasSize;
-        this._ResourcesService.load().then(()=>{
-            this.Restart();
+
+        this.resources = new Resources;
+        this.resources.load().then((result : any)=>{
+            this.images = result;
+            this.restart();
             this.resizeCanvas();
+
             this.Animate();
         })
     }
 
+
+    restart() { 
+        if (!this.env){
+            this.env = new Environment(this.roomsOnRow, this.roomsOnRow, this.roomSize, this.roomSize); 
+        }
+
+        if(this.isFinished) {
+            this.env = new Environment(this.roomsOnRow, this.roomsOnRow, this.roomSize, this.roomSize);
+        } else {
+            this.env.restart();
+        }
+
+        this.player = new Player(this.env, 0, 0);
+
+        this.isAlive = true;
+	    this.isFinished = false;
+
+        this.Animate();
+    }
+
+    resizeCanvas() {
+
+    }
+
+
     Animate() {
         this.Update();
-        this._GameService.randomInitialization(this.roomsOnRow,this.roomSize)
 	    this.draw();
     }
 
     draw() {
-
         this.context.clearRect(0,0, this.canvasSize, this.canvasSize)
-        
-        this._GameService.drawEnvironment(this.context, this.roomsOnRow, this.roomSize)
-        this._PlayerService.draw(this.context);
-    }
 
-    Update() :void {
-        if (this._PlayerService.update(this.context)) {
-            this._PlayerService.score += 10;
+        if (this.env) {
+            this.env.draw(this.context, this.images);
         }
     
-        // var deadWumpus = player.kill(keys);
-    
-        // if (deadWumpus) {
-        //     player.score += 1000;
-        //     env.removeWumpus(deadWumpus);
-        // }
-    
-        // var capturedGold = player.capture(keys);
-    
-        // if (capturedGold) {
-    
-        //     player.score += 1000;
-    
-        //     env.removeGold(capturedGold);
-    
-        //     resources.play("gold");
-    
-        //     if (env.golds.length == 0){
-        //         isFinished = true;
-        //     }
-        // }
-    
-        // if(env.hasAHole(player) || env.hasAWumpus(player)){
-        //     isAlive = false;
-        // }
-    
-        // $("#score").html(player.score);
-        // $("#arrow").html(player.arrow);
-        // $("#gold").html(env.golds.length);
-    
-        // if(!isAlive){
-        //     displayGameOver();
-        // }
-    
-        // if(isFinished){
-        //     displayCongratulations();
-        // }
-    }
-    
-    Restart(): void {
-        this._GameService.restart();
+        if (this.player) {
+            this.player.draw(this.context, this.images);
+        }
     }
 
-    resizeCanvas() : void {
+    Update() {
+        if (this.player.update(this.keyCodes, this.context, this.images)) {
+            this.player.score += 10;
+        }
+        
+        let deadWumpus = this.player.kill(this.keyCodes);
+
+        if (deadWumpus) {
+            this.player.score += 1000;
+            this.env.removeWumpus(deadWumpus);
+            this.player.update(this.keyCodes, this.context, this.images)
+        }
+    
+        let capturedGold = this.player.capture(this.keyCodes);
+    
+        if (capturedGold) {
+    
+            this.player.score += 1000;
+    
+            this.env.removeGold(capturedGold);
+    
+            // resources.play("gold");
+    
+            if (this.env.golds.length === 0 || this.env.wumpus === 0){
+                this.isFinished = true;
+            }
+        }
+    
+        if(this.env.hasAHole(this.player) || this.env.hasAWumpus(this.player)){
+            this.isAlive = false;
+            this.isFinished = true;
+            alert("morido")
+            this.restart();
+        }
+    }
+
+    
+    GameOver() {
 
     }
 
-    // isHole(player : any) {
-
-    //     for (let i = 0; i < this.holes.length; i++) {
-
-    //         const hole = this.holes[i];
-
-    //         if (hole[0] == this._PlayerService.getPosHorizontal() && hole[1] == this._PlayerService.getPosVertical()) {
-    //             return true;
-    //         }
-    //     }
-
-    //     return false;
-    // };
-
-	// isWumpus(player : any){
-	// 	for (let i = 0; i < this.wumpus.length; i++) {
-
-    //         const wumpu = this.wumpus[i];
-
-    //         if (wumpu[0] == this._PlayerService.getPosHorizontal() && wumpu[1] == this._PlayerService.getPosVertical()) {
-    //             return true;
-    //         }
-    //     }
-
-    //     return false;
-	// }
-
+    
 }

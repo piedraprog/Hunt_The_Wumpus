@@ -12,7 +12,12 @@
         <input type="range" min="0" max="100" value="10" class="slider" id="volume-slider">
       </div>
       <button type="button" class="btn btn-dark btn-lg" onclick="restart(); this.blur();">Restart</button>
+    
+    
 </div>
-<app-game
-    [worldSize]="worldSize"
-></app-game>
+
+<div class="game">
+	<app-game
+        [worldSize]="worldSize"
+    ></app-game>
+</div>
