@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { RulesModalComponent } from './rules-modal.component';
+import { ControlsComponent } from './controls.component';
 
-describe('RulesModalComponent', () => {
-  let component: RulesModalComponent;
-  let fixture: ComponentFixture<RulesModalComponent>;
+describe('ControlsComponent', () => {
+  let component: ControlsComponent;
+  let fixture: ComponentFixture<ControlsComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ RulesModalComponent ]
+      declarations: [ ControlsComponent ]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(RulesModalComponent);
+    fixture = TestBed.createComponent(ControlsComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

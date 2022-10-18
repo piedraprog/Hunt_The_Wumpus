@@ -1,0 +1,24 @@
+.title {
+    text-align: center;
+    font-size: 250%;
+    text-transform: uppercase;
+}
+
+mat-dialog-content {
+    display: flex;
+    flex-direction: row;
+
+    h2 {
+        text-transform: capitalize;
+    }
+
+    .actions {
+        width: 40%;
+        img {
+            margin: 10px;
+            width: 70%;
+            height: 70%;
+        }
+    }
+}
+

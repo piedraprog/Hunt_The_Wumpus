@@ -1,0 +1,18 @@
+<div class="game">
+    <canvas #gameCanvas style="border: solid black;"></canvas>
+    <div class="side-information">
+        <h1>{{'info' | translate}}</h1>
+        <label for="points">{{'score' | translate}}: <span>{{points}}</span> </label>
+
+        <label for="wumpus-ramain">{{'wumpus-remain' | translate}}:  <span>{{wumpusRemaining}}</span> </label>
+
+        <label for="gold-ramain">{{'ingots-remain' | translate}}:  <span>{{ ingotsRemaining }}</span> </label>
+
+        <label for="arrows">{{'arrow' | translate}}:<span>{{ arrowsRemaining }}</span></label>
+
+        <div class="buttons">
+            <button mat-raised-button color="primary" (click)="OpenControls()">{{'controls' | translate}}</button>
+            <button mat-raised-button color="primary" (click)="GameOver()">{{'game-over-btn' | translate}}</button>
+        </div>
+    </div>
+</div>

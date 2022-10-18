@@ -12,8 +12,15 @@
     </mat-toolbar-row>
     <mat-toolbar-row>
         <span class="spacer"></span>
-        <button mat-button routerLink="home">Home</button>
-        <button mat-button routerLink="leaderboard">leaderboard</button>
+        <button mat-button routerLink="home">{{ 'home' | translate }}</button>
+        <button mat-button routerLink="leaderboard">{{'leaderboard' | translate}}</button>
+        <button mat-button [mat-menu-trigger-for]="languages">{{ "languages" | translate }} ( {{ currentLang }} )</button>
         <span class="spacer"></span>
     </mat-toolbar-row>
 </mat-toolbar>
+
+<mat-menu #languages="">
+    <button mat-menu-item *ngFor="let lang of langs" (click)="changeLenguage(lang)">
+        {{lang}}
+    </button>
+</mat-menu>

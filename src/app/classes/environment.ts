@@ -104,10 +104,10 @@ export class Environment {
     };
 
     draw(ctx : CanvasRenderingContext2D, images: any) {
-        // const breeze = $.i18n("breeze");
-        const breeze = "brisa";
-        // const stench = $.i18n("stench");
-        const stench = "hedor";    
+
+        const breeze = "breeze";
+        const stench = "stench";    
+        const brightness = "brightness";
 
         for(var i = 0; i < this.row; i++){
             for(var j = 0; j < this.column; j++){
@@ -165,7 +165,7 @@ export class Environment {
 
     drawText(ctx : CanvasRenderingContext2D, text : string, row: number, column: number, offset: number){
         ctx.font="12px Verdana";
-        ctx.fillStyle = 'white';
+        ctx.fillStyle = 'black';
         ctx.textBaseline = "hanging";
         ctx.fillText(text, row * this.width + 2, column * this.height + offset);
     }

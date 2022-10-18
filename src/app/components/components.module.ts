@@ -4,23 +4,25 @@ import { AppRoutingModule } from "../app-routing.module";
 import { MeterialAngModule } from "../material-ang.module";
 import { GameComponent } from "./game/game.component";
 import { NavbarComponent } from "./navbar/navbar.component";
-import { RulesModalComponent } from "./rules-modal/rules-modal.component";
-
+import { TranslateModule } from '@ngx-translate/core';
+import { ControlsComponent } from './controls/controls.component';
+import { GameoverComponent } from './gameover/gameover.component';
 
 
 @NgModule({
     declarations:[
-        RulesModalComponent,
         GameComponent,
         NavbarComponent,
+        ControlsComponent,
+        GameoverComponent,
     ],
     imports:[
         BrowserModule,
         AppRoutingModule,
         MeterialAngModule,
+        TranslateModule
     ],
     exports:[
-        RulesModalComponent,
         GameComponent,
         NavbarComponent
     ]

@@ -4,13 +4,19 @@ import { StorageService } from '@services/storage/storage.service';
 import { Player } from '@classes/player';
 import { Resources } from '@classes/resources';
 import { Environment } from '@classes/environment';
+import { TranslateService } from '@ngx-translate/core'
+import { MatDialog } from '@angular/material/dialog'; 
+import { ControlsComponent } from '@components/controls/controls.component';
+import { GameoverComponent } from '@components/gameover/gameover.component';
+import { Router } from '@angular/router';
 
 
 // interface result
 
 @Component({
   selector: 'app-game',
-  template: `<canvas #gameCanvas style="border: solid black;"></canvas>`,
+  templateUrl: './game.component.html',
+  styleUrls: ['./game.component.scss']
 })
 
 export class GameComponent implements OnInit , AfterViewInit {
@@ -20,14 +26,20 @@ export class GameComponent implements OnInit , AfterViewInit {
     @ViewChild('gameCanvas', { static: false }) gameCanvas: any;
         
     canvasSize: number = 750;
-    roomsOnRow: number = 10;
+    roomsOnRow: number = 12;
     roomSize :number = this.canvasSize / this.roomsOnRow;
     worldAutoIncrement = false;
     context : CanvasRenderingContext2D;
     isFinished : boolean = false;
     isDead : boolean = false;
     images : any;
+    lang: string;
 
+
+    points: number = 0;
+    arrowsRemaining: number = 8;
+    wumpusRemaining: number = 8;
+    ingotsRemaining: number = 8;
 
     // objects 
     player : Player;
@@ -46,7 +58,10 @@ export class GameComponent implements OnInit , AfterViewInit {
 
 
     constructor(
-        private _StorageService: StorageService
+        private _StorageService: StorageService,
+        private _Translate: TranslateService,
+        public _dialog : MatDialog,
+        private _router: Router,
     ) { }
 
     @HostListener('document:keydown', ['$event'])
@@ -82,16 +97,14 @@ export class GameComponent implements OnInit , AfterViewInit {
     }
 
     ngOnInit(): void {
-        this._StorageService.saveData("roomSize",this.roomSize.toString());
-        this._StorageService.saveData("roomOnRow",this.roomsOnRow.toString());
+
     }
     
-    
     ngAfterViewInit(): void {
+        this.lang = this._Translate.currentLang;
         this.Render()
     }
 
-    
     private Render() : void {
         const canvas = this.gameCanvas.nativeElement;
         this.context = canvas.getContext('2d');
@@ -103,12 +116,9 @@ export class GameComponent implements OnInit , AfterViewInit {
         this.resources.load().then((result : any)=>{
             this.images = result;
             this.restart();
-            this.resizeCanvas();
-
             this.Animate();
         })
     }
-
 
     restart() { 
         if (!this.env){
@@ -127,10 +137,6 @@ export class GameComponent implements OnInit , AfterViewInit {
 	    this.isFinished = false;
 
         this.Animate();
-    }
-
-    resizeCanvas() {
-
     }
 
 
@@ -153,13 +159,16 @@ export class GameComponent implements OnInit , AfterViewInit {
 
     Update() {
         if (this.player.update(this.keyCodes, this.context, this.images)) {
-            this.player.score += 10;
+            this.points += 10;
         }
         
         let deadWumpus = this.player.kill(this.keyCodes);
 
+        this.arrowsRemaining = this.player.arrow;
+        
         if (deadWumpus) {
-            this.player.score += 1000;
+            this.points += 1000;
+            this.wumpusRemaining--;
             this.env.removeWumpus(deadWumpus);
             this.player.update(this.keyCodes, this.context, this.images)
         }
@@ -168,29 +177,38 @@ export class GameComponent implements OnInit , AfterViewInit {
     
         if (capturedGold) {
     
-            this.player.score += 1000;
-    
+            this.points += 1000;
+            this.ingotsRemaining--;
             this.env.removeGold(capturedGold);
     
-            // resources.play("gold");
-    
-            if (this.env.golds.length === 0 || this.env.wumpus === 0){
-                this.isFinished = true;
-            }
         }
     
-        if(this.env.hasAHole(this.player) || this.env.hasAWumpus(this.player)){
+        if(this.env.hasAHole(this.player) || this.env.hasAWumpus(this.player) || this.env.golds.length === 0 && this.env.wumpus.length === 0){
             this.isAlive = false;
             this.isFinished = true;
-            alert("morido")
-            this.restart();
+            this.GameOver();
+            
         }
     }
 
-    
     GameOver() {
+        const gameOverModal = this._dialog.open(GameoverComponent,{
+            data: {"points":this.points, "isAlive":this.isAlive}
+        })
 
+
+        gameOverModal.afterClosed().subscribe(result =>{
+            console.log(result)
+
+            this._StorageService.saveData(result,this.points.toString())
+            window.location.reload()
+        })
+        
+        
+        this.restart();
     }
 
-    
+    OpenControls() {
+        const controlModal = this._dialog.open(ControlsComponent)
+    }
 }

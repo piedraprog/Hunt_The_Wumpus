@@ -1,23 +1,47 @@
-<div class="slide">
-    <div class="sidebar-content">
-        <label for="world-size-slider">World size: <span class="world-size-value"></span></label><br>
-        <input type="range" min="4" max="20" value="4" class="slider" id="world-size-slider">
-      </div>
-      <div class="sidebar-content">
-        <input type="checkbox" id="world-auto-increment">
-        <label for="world-auto-increment">Increase world size after victory</label>
-      </div>
-      <div class="sidebar-content">
-        <label for="volume-slider">Volume: <span class="volume-value"></span></label><br>
-        <input type="range" min="0" max="100" value="10" class="slider" id="volume-slider">
-      </div>
-      <button type="button" class="btn btn-dark btn-lg" onclick="restart(); this.blur();">Restart</button>
+<div class="container">
     
-    
+	<mat-card class="card" *ngIf="homePageIsVisible">
+		<mat-card-title>
+			<h1>Hunt the wumpus</h1>
+		</mat-card-title>
+		<mat-card-content>
+			<p>{{'game-explanation' | translate}}</p>
+			
+			<h4>{{ 'game-explanation2'| translate}}</h4>
+			
+			<ul>
+				<li>{{ 'rule1' | translate}}</li>
+				<li>{{ 'rule2' | translate}}</li>
+				<li>{{ 'rule3' | translate}}</li>
+				<li>{{ 'rule4' | translate}}</li>
+			</ul>
+		</mat-card-content>
+		<mat-card-actions>
+			<button  mat-raised-button class="btn-settings" (click)="openSettings()">{{'settings' | translate}}</button>
+			<button  mat-raised-button class="btn-start" (click)="play()">{{ 'start' | translate}}</button>
+			<button  mat-raised-button class="btn-controls" (click)="openControls()">{{ 'controls' | translate}}</button>
+		</mat-card-actions>
+	</mat-card>
+
+	<mat-card class="card" *ngIf="settingsIsVisible">
+		<mat-card-title>
+			<h1>{{ 'setings' | translate}}</h1>
+		</mat-card-title>
+		<mat-card-content>
+			
+		</mat-card-content>
+		<mat-card-actions>
+			<button  mat-raised-button class="btn-settings" (click)="openHome()">{{'home' | translate}}</button>
+			<button  mat-raised-button class="btn-start" (click)="play()">{{ 'start' | translate}}</button>
+			<button  mat-raised-button class="btn-controls" (click)="openControls()">{{ 'controls' | translate}}</button>
+		</mat-card-actions>
+	</mat-card>
+
+	<div class="game" *ngIf="gameVisible">
+	<!-- <div class="game"> -->
+		<app-game
+			[worldSize]="worldSize"
+		></app-game>
+	</div>
 </div>
 
-<div class="game">
-	<app-game
-        [worldSize]="worldSize"
-    ></app-game>
-</div>

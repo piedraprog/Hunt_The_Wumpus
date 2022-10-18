@@ -5,6 +5,8 @@ import { ComponentModule } from "@components/components.module";
 import { MeterialAngModule } from "../material-ang.module";
 import { HomepageComponent } from "./homepage/homepage.component";
 import { LeaderboardComponent } from './leaderboard/leaderboard.component';
+import { TranslateModule } from '@ngx-translate/core'
+
 
 @NgModule({
     declarations:[
@@ -15,7 +17,8 @@ import { LeaderboardComponent } from './leaderboard/leaderboard.component';
         BrowserModule,
         AppRoutingModule,
         MeterialAngModule,
-        ComponentModule
+        ComponentModule,
+        TranslateModule
     ],
     exports:[
         HomepageComponent,

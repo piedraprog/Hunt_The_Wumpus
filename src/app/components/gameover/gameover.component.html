@@ -1,0 +1,14 @@
+<h2 mat-dialog-title *ngIf="data.isAlive" >{{'congratulations' | translate}}</h2>
+<h2 mat-dialog-title *ngIf="!data.isAlive">{{'game-over' | translate}}</h2>
+<div mat-dialog-content>
+	<mat-form-field>
+		<mat-label>{{'insertName' | translate}}</mat-label>
+		<input #nameInput type="text" matInput  placeholder="Charlie" required>
+	</mat-form-field>
+
+	<h3>{{'yourPoints' | translate}}</h3>
+	{{data.points}}
+</div>
+<div mat-dialog-actions>
+	<button mat-raised-button (click)="CloseModal(nameInput.value)">{{'close' | translate}}</button>
+</div>

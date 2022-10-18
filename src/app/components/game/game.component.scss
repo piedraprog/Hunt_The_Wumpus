@@ -1,0 +1,44 @@
+.game {
+    display: flex;
+    height: 755px;
+
+    .side-information {
+        border-radius: 5px;
+        background: #ffffff;
+        width: 250px;
+        height: 355px;;
+        margin-left: 10px;
+        display: flex;
+        flex-direction: column;
+
+
+        h1 {
+            font-size: 200%;
+            font-weight: 900;
+            text-align: center;
+            padding-top: 5%;
+        }
+
+        label {
+            margin-left: 5%;
+            margin-top: 5%;
+            // padding-top: 50px;
+            font-size: 120%;
+            text-transform: capitalize;
+            font-weight: bold;
+        }
+
+        span {
+            font-weight: normal;
+        }
+
+        .buttons {
+            margin-top: 2rem;            
+        }
+
+        button {
+            width: 90%;
+            margin: 10px 10px 5px 10px;
+        }
+    }
+}
